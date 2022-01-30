@@ -13,8 +13,9 @@ struct RenderContext {
 	unsigned int	screen_width;		//当前视口宽度
 	unsigned int	screen_height;		//当前视口高度
 
-	vec3			m_meshPosition;     //当前Mesh的世界坐标
-	vec3			m_meshScale;		//当前Mesh的缩放
+	mat4			m_modelMatrix;      //Model矩阵
+
+
 };
 
 //Renderer维护一个renderCtx,实现绘制一帧画面的所有方法
@@ -60,22 +61,19 @@ public:
 		*/
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
+		//shader内置变量传递（不需要editor内改变的uniform）
 		//从相机读取vp矩阵。
 		mat4 _projection = perspective(radians(ms_Ctx.m_curCamera->Zoom), (float)ms_Ctx.screen_width/ms_Ctx.screen_height, 0.1f, 100.0f);
 		mat4 _view = ms_Ctx.m_curCamera->GetViewMatrix();
-
-		//m矩阵由mesh自身的位置决定
-		mat4 _model = mat4(1.0f);
-		_model = translate(_model,ms_Ctx.m_meshPosition); // translate it down so it's at the center of the scene
-		_model = scale(_model,ms_Ctx.m_meshScale);	// it's a bit too big for our scene, so scale it down
-
-		//shader内置变量传递（不需要editor内改变的uniform）
 		ms_Ctx.m_curMaterial->SetUniform<mat4, MWDMat4>(string("proj_matrix"), _projection);
 		ms_Ctx.m_curMaterial->SetUniform<mat4, MWDMat4>(string("view_matrix"), _view);
-		ms_Ctx.m_curMaterial->SetUniform<mat4, MWDMat4>(string("model_matrix"), _model);
-		
+		ms_Ctx.m_curMaterial->SetUniform<mat4, MWDMat4>(string("model_matrix"), ms_Ctx.m_modelMatrix);
+
+		ms_Ctx.m_curMaterial->SetUniform<vec3, MWDVec3>(string("lightPos"),vec3(10,10,10));
+		ms_Ctx.m_curMaterial->SetUniform<vec3, MWDVec3>(string("viewPos"),ms_Ctx.m_curCamera->Position );
 		
 		//填写Shader参数
 		MWDMaterial* cur_Material = ms_Ctx.m_curMaterial;

@@ -24,6 +24,7 @@ struct Vertex {
 //Mesh维护IBO和VBO(Mesh实例化的时候就已经上传显存了,存储在VAO中)
 class MWDRenderer;
 class MWDMaterial;
+class MWDModel;
 class MWDMesh
 {
 public:
@@ -31,9 +32,12 @@ public:
     MWDMaterial*            m_material;
     vector<Vertex>          vertices;
     vector<unsigned int>    indices;
+    MWDModel*               m_Owner;
     // constructor
-    MWDMesh(vector<Vertex> vertices, vector<unsigned int> indices);
-    
+    MWDMesh(vector<Vertex> vertices, vector<unsigned int> indices,MWDModel* owner);
+    ~MWDMesh() {
+        m_Owner = NULL;
+    }
     unsigned int VAO;
     private:
     //存储在显存的Mesh数据

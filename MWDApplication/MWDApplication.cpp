@@ -33,7 +33,7 @@ void ImGuiTerminate() {
 }
 
 void ImGuiFrameBegin() {
-	glClearColor(0.5, 0.5, 0.5, 1);
+	glClearColor(0.1, 0.1, 0.1, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
 	ImGui_ImplOpenGL3_NewFrame();
@@ -105,24 +105,38 @@ int main() {
 	ImGuiInit(Hwindow);
 
 #pragma endregion
-	MWDModel model = MWDModel(string("model_0"),string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/car.obj"));
-	MWDModel model1 = MWDModel(string("model_1"),string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/f.fbx"));
-	//model1.meshes[0].m_material->SetSampler(string("diffuse_map"),string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png"));
 	MWDRenderer::GetMainRenderer()->SetCamera(&camera);
 	MWDRenderer::GetMainRenderer()->SetScreenHeight(SCR_HEIGHT);
 	MWDRenderer::GetMainRenderer()->SetScreenWidth(SCR_WIDTH);
 
+	MWDModel Lucia = MWDModel(string("model_1"),string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/f.fbx"));
+	Lucia.SetWorldEulers( 0,-90.0f, 0);
+	//0123不知道是啥.4是右腿，5是左腿，6是眼睛，7是脸，8是头发，9是手，10是耳机，11是衣服
+	Lucia.meshes[4].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia//R3Luxiya01001Down.png");
+	Lucia.meshes[5].m_material->SetSampler("diffuse_map","C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
+	Lucia.meshes[6].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Eye.png");
+	Lucia.meshes[7].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Face.png");
+	Lucia.meshes[8].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Hair.png");
+	Lucia.meshes[9].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Hand.png");
+	Lucia.meshes[10].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Upper.png");
+	Lucia.meshes[11].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Upper.png");
+
+	Lucia.meshes[3].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Body.png");
+	Lucia.meshes[2].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Body.png");
+	Lucia.meshes[1].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Down.png");
+	Lucia.meshes[0].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Down.png");
 	while (!glfwWindowShouldClose(Hwindow)) {
+		#pragma region updateTime
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		ImGuiFrameBegin();
+		#pragma endregion
 		processInput(Hwindow);
-		ImGui::ShowDemoWindow();
-		model1.Draw();
-		model.Draw();
 
+		ImGuiFrameBegin();
+		Lucia.Draw();
 		ImGuiFrameEnd(Hwindow);
+
 	};
 
 	ImGuiTerminate();

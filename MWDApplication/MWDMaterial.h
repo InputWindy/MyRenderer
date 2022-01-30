@@ -6,11 +6,14 @@
 //Material维护ShaderProgram的Uniform变量
 class MWDMaterial
 {
-protected:
-    static inline MWDMaterial* defaultMaterial = NULL;
 public:
     MWDMaterial() {
         m_shaderProgram = MWDShader::GetDefault();
+        m_renderState = MWDRenderState::GetDefault();
+    }
+    MWDMaterial(string vshader,string fshader) {
+        m_shaderProgram = new MWDShader(vshader.c_str(),fshader.c_str());
+        *m_shaderProgram = *MWDShader::GetDefault();
         m_renderState = MWDRenderState::GetDefault();
     }
 public:
@@ -66,9 +69,19 @@ public:
         }
         return false;
     }
+    //获取一个默认材质的实例(new了新空间)
     static MWDMaterial* GetDefault() {
-        if (!defaultMaterial) {
-            defaultMaterial = new MWDMaterial();
+        MWDMaterial* defaultMaterial = new MWDMaterial();
+        if (defaultMaterial) {
+
+            #pragma region 内置变量
+            vec3 lightpos = vec3();
+            MWDVec3* _lightPos = new MWDVec3(string("lightPos"),string("lightPos"),lightpos);
+            defaultMaterial->AddUniform(_lightPos);
+
+            vec3 viewpos = vec3();
+            MWDVec3* _viewpos = new MWDVec3(string("viewPos"), string("viewPos"), viewpos);
+            defaultMaterial->AddUniform(_viewpos);
 
             mat4 model = mat4();
             MWDMat4* _model = new MWDMat4(string("model"),string("model_matrix"),model);
@@ -81,9 +94,25 @@ public:
             mat4 proj = mat4();
             MWDMat4* _proj = new MWDMat4(string("projection"), string("proj_matrix"), proj);
             defaultMaterial->AddUniform(_proj);
+            #pragma endregion
 
+            #pragma region 编辑器内设置的变量
             MWDTexture* tex = new MWDTexture(string("diffuse_map"), 0);
             defaultMaterial->AddSampler(tex);
+
+            MWDTexture* tex1 = new MWDTexture(string("normal_map"), 1);
+            defaultMaterial->AddSampler(tex1);
+
+            MWDTexture* tex2 = new MWDTexture(string("specular_map"), 2);
+            defaultMaterial->AddSampler(tex2);
+
+            MWDTexture* tex3 = new MWDTexture(string("metallic_map"), 3);
+            defaultMaterial->AddSampler(tex3);
+
+            MWDTexture* tex4 = new MWDTexture(string("ao_map"), 4);
+            defaultMaterial->AddSampler(tex4);
+
+            #pragma endregion
 
         }
         return defaultMaterial;

@@ -19,6 +19,9 @@
     <Filter Include="头文件\RenderState">
       <UniqueIdentifier>{5be58403-7095-425a-8c7b-000726486286}</UniqueIdentifier>
     </Filter>
+    <Filter Include="资源文件\Shader">
+      <UniqueIdentifier>{9f3bd8a1-0fc6-4b18-a686-4d36ad858368}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MWDApplication.h">
@@ -81,6 +84,9 @@
     <ClInclude Include="MWDRenderer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MWDTransform.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MWDApplication.cpp">
@@ -134,10 +140,19 @@
     <ClCompile Include="MWDRenderer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MWDTransform.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\depend\imgui\imgui.ini">
       <Filter>头文件\imgui</Filter>
+    </None>
+    <None Include="..\shaders\default.vert">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="..\shaders\default.frag">
+      <Filter>资源文件\Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

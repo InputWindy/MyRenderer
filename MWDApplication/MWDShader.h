@@ -162,7 +162,7 @@ public:
     }
     static MWDShader* GetDefault() {
         if (!defaultShader) {
-            defaultShader = new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/vert.vs", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/frag.fs");
+            defaultShader = new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/default.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/default.frag");
         }
         return defaultShader;
     }

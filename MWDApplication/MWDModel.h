@@ -4,6 +4,7 @@
 #include <../assimp/postprocess.h>
 #include "MWDMesh.h"
 #include "MWDMaterial.h"
+#include "MWDTransform.h"
 //Model维护Mesh数组和一个材质
 class MWDRenderer;
 class MWDModel
@@ -18,11 +19,21 @@ public:
 	~MWDModel() {
 	}
 public:
-    string m_name;
+    string              m_name;
+    MWDTransform        m_transform;
 	vector<MWDMesh>		meshes;
 	string directory;
 	bool gammaCorrection;
     void Draw();
+    void SetWorldPosition(float x, float y, float z) {
+        m_transform.SetWorldPosition(x,y,z);
+    }
+    void SetWorldEulers(float yaw, float pitch, float roll) {
+        m_transform.SetWorldEulers(yaw,pitch,roll);
+    }
+    void SetWorldScale(float x, float y, float z) {
+        m_transform.SetWorldScale(x,y,z);
+    }
 private:
     void loadModel(string const& path)
     {
@@ -123,7 +134,8 @@ private:
             for (unsigned int j = 0; j < face.mNumIndices; j++)
                 indices.push_back(face.mIndices[j]);
         }
-        return MWDMesh(vertices, indices);
+        MWDMesh ret = MWDMesh(vertices, indices,this);
+        return ret;
     }
 };
 
