@@ -1,0 +1,13 @@
+﻿  MWDApplication.cpp
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDShader.h(48,40): warning C4101: “e”: 未引用的局部变量
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDRenderer.h(110,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDApplication.cpp(116,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDApplication.cpp(153,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDApplication.cpp(154,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDApplication.cpp(158,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDApplication.cpp(159,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDApplication.cpp(161,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDApplication.cpp(162,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\MWDApplication\MWDApplication.cpp(168,28): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+LINK : warning LNK4098: 默认库“MSVCRT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+  MWDApplication.vcxproj -> C:\Users\InputWindy\Desktop\MyRenderer\MWDEngine\x64\Debug\MWDApplication.exe
