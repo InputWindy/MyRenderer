@@ -5,23 +5,67 @@
 //使用方法：先bind，再SetSampler，再Unbind
 class MWDTexture {
 public:
-    MWDTexture(string nameineditor, unsigned int tex_unit,string path = string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/img/default.jpeg")) {
+    //FBO绑定使用
+    MWDTexture(unsigned int tex_unit = 0, int wid = 800, int hei = 600, int channels = 3) {
+        m_tex_unit = tex_unit;
+        width = wid;
+        height = hei;
+        nrComponents = channels;
+
+        glGenTextures(1, &id);
+        glActiveTexture(tex_unit);
+        glBindTexture(GL_TEXTURE_2D, id);
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, NULL);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glActiveTexture(0);
+    }
+    //Shader贴图导入
+    MWDTexture(string nameineditor, unsigned int tex_unit, string path = string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/img/default.jpeg")) {
         m_path = path;
         m_tex_unit = tex_unit;
         nameInEditor = nameineditor;
         id = loadTexture(path.c_str(), tex_unit);
     }
+    ~MWDTexture() {
+        glDeleteTextures(1,&id);
+    }
     void Bind() {
-        glActiveTexture(GL_TEXTURE0+m_tex_unit);
+        glActiveTexture(GL_TEXTURE0 + m_tex_unit);
         glBindTexture(GL_TEXTURE_2D, id);
     }
     void UnBind() {
         glActiveTexture(0);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
+    void operator=(const MWDTexture& texture) {
+        m_path = texture.m_path;
+        nameInEditor = texture.nameInEditor;
+        m_tex_unit = texture.m_tex_unit;
+        width = texture.width;
+        height = texture.height;
+        nrComponents = texture.nrComponents;
+        glDeleteTextures(1, &id);
+        id = texture.id;
+    }
 public:
     unsigned int id;
     unsigned int m_tex_unit;
+    int width;
+    int height;
+    int nrComponents;
     string m_path;
     string nameInEditor;
 private:
@@ -31,7 +75,6 @@ private:
         unsigned int textureID;
         glGenTextures(1, &textureID);
 
-        int width, height, nrComponents;
         unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
         if (data)
         {
@@ -82,12 +125,12 @@ public:
         UT_MAX
     };
 protected:
-	MWDUniform(string nameinshader,string nameineditor) {
+    MWDUniform(string nameinshader, string nameineditor) {
         nameInShader = nameinshader;
         nameInEditor = nameineditor;
     }
 public:
-	~MWDUniform() {}
+    ~MWDUniform() {}
     virtual unsigned int GetUniformType() {
         return UT_MAX;
     }
@@ -97,7 +140,7 @@ public:
 
 class MWDInt : public MWDUniform {
 public:
-    MWDInt(string nameinshader, string nameineditor,int data)
+    MWDInt(string nameinshader, string nameineditor, int data)
         :MWDUniform(nameinshader, nameineditor) {
         m_data = data;
     }

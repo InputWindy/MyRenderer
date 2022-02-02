@@ -1,6 +1,7 @@
 #pragma once
 #include "headers.h"
 #include "MWDShader.h"
+#include "MWDMaterial.h"
 #define MAX_BONE_INFLUENCE 4
 #define MAX_UV_NUM 8
 //顶点维护pos，normal，uv(8套)，tangent，bitangent，骨骼索引，骨骼权重
@@ -38,11 +39,10 @@ public:
     ~MWDMesh() {
         m_Owner = NULL;
     }
-    unsigned int VAO;
-    private:
     //存储在显存的Mesh数据
+    unsigned int VAO;
     unsigned int VBO, IBO;
-    
+    private:
     void setupMesh()
     {
         glGenVertexArrays(1, &VAO);

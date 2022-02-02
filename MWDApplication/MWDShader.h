@@ -3,8 +3,6 @@
 //ShaderÎ¬»¤Ò»¸öShaderProgram
 class MWDShader
 {
-protected:
-    static inline MWDShader* defaultShader = NULL;
 public:
     unsigned int ID;
     MWDShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
@@ -161,10 +159,13 @@ public:
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
     static MWDShader* GetDefault() {
-        if (!defaultShader) {
-            defaultShader = new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/default.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/default.frag");
-        }
-        return defaultShader;
+        return new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/default.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/default.frag");
+    }
+    static MWDShader* GetScreenShader() {
+        return new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/offScreen.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/offScreen.frag");
+    }
+    static MWDShader* GetSkyBoxShader() {
+        return new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/skyBox.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/skyBox.frag");
     }
 private:
     void checkCompileErrors(GLuint shader, std::string type)

@@ -17,6 +17,12 @@ public:
 		loadModel(path);
 	}
 	~MWDModel() {
+        int num = meshes.size();
+        for (int i = 0; i < num; ++i) {
+            glDeleteVertexArrays(1,&(meshes[i].VAO));
+            glDeleteBuffers(1, &(meshes[i].VBO));
+            glDeleteBuffers(1, &(meshes[i].IBO));
+        }
 	}
 public:
     string              m_name;
@@ -70,7 +76,7 @@ private:
         }
 
     }
-    MWDMesh processMesh(aiMesh* mesh, const aiScene* scene)
+    MWDMesh& processMesh(aiMesh* mesh, const aiScene* scene)
     {
         // data to fill
         vector<Vertex> vertices;
@@ -134,7 +140,7 @@ private:
             for (unsigned int j = 0; j < face.mNumIndices; j++)
                 indices.push_back(face.mIndices[j]);
         }
-        MWDMesh ret = MWDMesh(vertices, indices,this);
+        MWDMesh& ret =*new MWDMesh(vertices, indices,this);
         return ret;
     }
 };

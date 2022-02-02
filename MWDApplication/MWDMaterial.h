@@ -2,19 +2,18 @@
 #include "MWDShader.h"
 #include "MWDUniform.h"
 #include "MWDRenderState.h"
-#include "MWDMesh.h"
 //Material维护ShaderProgram的Uniform变量
 class MWDMaterial
 {
+protected:
+    static inline MWDMaterial* m_screenTexture = NULL;
 public:
     MWDMaterial() {
         m_shaderProgram = MWDShader::GetDefault();
-        m_renderState = MWDRenderState::GetDefault();
     }
     MWDMaterial(string vshader,string fshader) {
         m_shaderProgram = new MWDShader(vshader.c_str(),fshader.c_str());
         *m_shaderProgram = *MWDShader::GetDefault();
-        m_renderState = MWDRenderState::GetDefault();
     }
 public:
     //初始化材质的时候调用AddUniform
@@ -62,8 +61,7 @@ public:
         for (vector<MWDTexture*>::iterator iter = m_sampler.begin(); iter < m_sampler.end(); ++iter) {
             MWDTexture* tmp = *iter;
             if (tmp->nameInEditor == nameineditor) {
-                MWDTexture tex = MWDTexture(nameineditor, tmp->m_tex_unit,path);
-                *tmp = tex;
+                *tmp = *new MWDTexture(nameineditor, tmp->m_tex_unit, path);;
                 return true;
             }
         }
@@ -112,14 +110,26 @@ public:
             MWDTexture* tex4 = new MWDTexture(string("ao_map"), 4);
             defaultMaterial->AddSampler(tex4);
 
+            MWDTexture* tex5 = new MWDTexture(string("pbr_map"), 5);
+            defaultMaterial->AddSampler(tex5);
+            
             #pragma endregion
 
         }
         return defaultMaterial;
     }
+    //new一个新材质
+    static MWDMaterial* GetScreenMaterial() {
+        if (!m_screenTexture) {
+            m_screenTexture = new MWDMaterial("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/offScreen.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/offScreen.frag");
+            MWDTexture* tex5 = new MWDTexture(string("screenTexture"), 0);
+            m_screenTexture->AddSampler(tex5);
+        }
+        return m_screenTexture;
+    }
 public:
     MWDShader* m_shaderProgram;
-    MWDRenderState* m_renderState;
+    MWDRenderState m_renderState;
     vector<MWDUniform*> m_uniform;
     vector<MWDTexture*> m_sampler;
 };

@@ -171,9 +171,11 @@
     <ClInclude Include="MWDMaterial.h" />
     <ClInclude Include="MWDMesh.h" />
     <ClInclude Include="MWDModel.h" />
+    <ClInclude Include="MWDPass.h" />
     <ClInclude Include="MWDRenderer.h" />
     <ClInclude Include="MWDRenderState.h" />
     <ClInclude Include="MWDShader.h" />
+    <ClInclude Include="MWDSkyBox.h" />
     <ClInclude Include="MWDTransform.h" />
     <ClInclude Include="MWDUniform.h" />
   </ItemGroup>
@@ -191,16 +193,22 @@
     <ClCompile Include="MWDMaterial.cpp" />
     <ClCompile Include="MWDMesh.cpp" />
     <ClCompile Include="MWDModel.cpp" />
+    <ClCompile Include="MWDPass.cpp" />
     <ClCompile Include="MWDRenderer.cpp" />
     <ClCompile Include="MWDRenderState.cpp" />
     <ClCompile Include="MWDShader.cpp" />
+    <ClCompile Include="MWDSkyBox.cpp" />
     <ClCompile Include="MWDTransform.cpp" />
     <ClCompile Include="MWDUniform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\depend\imgui\imgui.ini" />
+    <None Include="..\shaders\skyBox.frag" />
+    <None Include="..\shaders\skyBox.vert" />
     <None Include="..\shaders\default.frag" />
     <None Include="..\shaders\default.vert" />
+    <None Include="..\shaders\offScreen.frag" />
+    <None Include="..\shaders\offScreen.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

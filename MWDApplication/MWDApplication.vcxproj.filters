@@ -22,6 +22,9 @@
     <Filter Include="资源文件\Shader">
       <UniqueIdentifier>{9f3bd8a1-0fc6-4b18-a686-4d36ad858368}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Pass">
+      <UniqueIdentifier>{acdc164a-c613-4dfb-9353-9fe4f07b4cb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MWDApplication.h">
@@ -87,6 +90,12 @@
     <ClInclude Include="MWDTransform.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MWDSkyBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MWDPass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MWDApplication.cpp">
@@ -143,6 +152,12 @@
     <ClCompile Include="MWDTransform.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MWDSkyBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MWDPass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\depend\imgui\imgui.ini">
@@ -152,6 +167,18 @@
       <Filter>资源文件\Shader</Filter>
     </None>
     <None Include="..\shaders\default.frag">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="..\shaders\offScreen.frag">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="..\shaders\offScreen.vert">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="..\shaders\skyBox.frag">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="..\shaders\skyBox.vert">
       <Filter>资源文件\Shader</Filter>
     </None>
   </ItemGroup>
