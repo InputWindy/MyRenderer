@@ -3,6 +3,9 @@
 //ShaderÎ¬»¤Ò»¸öShaderProgram
 class MWDShader
 {
+protected:
+    static inline MWDShader* ScreenShader = NULL;
+    static inline MWDShader* SkyBoxShader = NULL;
 public:
     unsigned int ID;
     MWDShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
@@ -162,10 +165,16 @@ public:
         return new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/default.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/default.frag");
     }
     static MWDShader* GetScreenShader() {
-        return new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/offScreen.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/offScreen.frag");
+        if (!ScreenShader) {
+            ScreenShader = new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/offScreen.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/offScreen.frag");
+        }
+        return ScreenShader;
     }
     static MWDShader* GetSkyBoxShader() {
-        return new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/skyBox.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/skyBox.frag");
+        if (!SkyBoxShader) {
+            SkyBoxShader = new MWDShader("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/skyBox.vert", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/shaders/skyBox.frag");
+        }
+        return SkyBoxShader;
     }
 private:
     void checkCompileErrors(GLuint shader, std::string type)

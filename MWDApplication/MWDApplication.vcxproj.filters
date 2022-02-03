@@ -181,5 +181,11 @@
     <None Include="..\shaders\skyBox.vert">
       <Filter>资源文件\Shader</Filter>
     </None>
+    <None Include="..\shaders\shadowMap.frag">
+      <Filter>资源文件\Shader</Filter>
+    </None>
+    <None Include="..\shaders\shadowMap.vert">
+      <Filter>资源文件\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

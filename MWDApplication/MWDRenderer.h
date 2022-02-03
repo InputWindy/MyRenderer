@@ -5,6 +5,7 @@
 #include "MWDCamera.h"
 #include "MWDMaterial.h"
 #include "MWDSkyBox.h"
+#include "MWDPass.h"
 static float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
 		-1.0f,  1.0f,  0.0f, 1.0f,
@@ -57,7 +58,7 @@ public:
 	}
 };
 
-struct  ColorBuffer
+struct ColorBuffer
 {
 public:
 	ColorBuffer() {
@@ -176,6 +177,7 @@ public:
 
 	MWDSkyBox*		m_curSkyBox;		//当前使用的天空盒（天空盒是渲染优先级最低的Mesh）
 
+	vector<MWDPass*>	m_Pass;			//维护特殊渲染流程
 };
 
 //Renderer维护一个renderCtx,实现绘制一帧画面的所有方法
@@ -212,48 +214,16 @@ public:
 		}
 		return ms_Renderer;
 	}
-
 	//遍历所有的Pass，每个Pass内执行一次完整的渲染。
 	//除了主Pass需要填写实时Uniform，其他Pass都只需要填写内置Uniform
+	static void UseMSAA() {
+		glEnable(GL_MULTISAMPLE);
+	}
 	void DrawFrame() {
 		AnalyzeRenderState();
 		SetInnerUniform(ms_Ctx.m_curMaterial);
 		DeliverMaterialUniform(ms_Ctx.m_curMaterial);
-		//↓不变的代码
-		#pragma region 绘制Mesh
-		//非离屏渲染
-		if (!ms_Ctx.m_OffScreenRender) {
-			Render();
-		}
-		//离屏渲染
-		else {
-			//Pass1（离屏渲染到rbo和颜色缓冲）
-			ms_Ctx.m_ZSBuffer.SetWidthHeight(ms_Ctx.screen_width, ms_Ctx.screen_height);
-			ms_Ctx.m_ColorBuffer.SetWidthHeight(ms_Ctx.screen_width, ms_Ctx.screen_height);
-			if (!ms_Ctx.m_FBO.CheckIsComplete()) {
-				return;
-			};
-			//ms_Ctx.m_FBO.Bind();
-			Render();
-			//ms_Ctx.m_FBO.unBind();
-
-			//Pass2（绘制颜色缓冲）s
-			/*glDisable(GL_DEPTH_TEST); 
-			glClearColor(0.1, 0.1, 0.1, 1);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			MWDShader* screenShader = MWDShader::GetScreenShader();
-			screenShader->use();
-			glActiveTexture(GL_TEXTURE0);
-			ms_Ctx.m_ColorBuffer.Bind();
-			screenShader->setInt("screenTexture", 0);
-
-			ms_Ctx.m_screenMesh.Bind();
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-			ms_Ctx.m_screenMesh.unBind();*/
-
-		}
-		#pragma endregion
+		Render();
 	}
 	void SetCamera(MWDCamera* camera) {
 		assert(camera);
@@ -271,16 +241,46 @@ public:
 		assert(skyBox);
 		ms_Ctx.m_curSkyBox = skyBox;
 	}
+	//清空各种缓冲，渲染天空盒。烘焙光照贴图，光照探针，阴影贴图
 	static void BeginRendering() {
 		glClearColor(0.1, 0.1, 0.1, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_TRIANGLES);
+		RenderContext* ms_Ctx = &GetMainRenderer()->ms_Ctx;
+		if (ms_Ctx->m_OffScreenRender) {
+			ms_Ctx->m_ZSBuffer.SetWidthHeight(ms_Ctx->screen_width, ms_Ctx->screen_height);
+			ms_Ctx->m_ColorBuffer.SetWidthHeight(ms_Ctx->screen_width, ms_Ctx->screen_height);
+			if (!ms_Ctx->m_FBO.CheckIsComplete()) {
+				return;
+			};
+			ms_Ctx->m_FBO.Bind();
+		}
 		GetMainRenderer()->DrawSkyBox();
 	}
+	//执行屏幕后处理/延迟渲染
 	static void EndRendering() {
-		
+		MWDShader* screenShader = MWDShader::GetScreenShader();
+		RenderContext* ms_Ctx = &GetMainRenderer()->ms_Ctx;
+		ms_Ctx->m_FBO.unBind();
+		if (ms_Ctx->m_OffScreenRender) {
+			//Pass2（绘制颜色缓冲）
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_STENCIL_TEST);
+			glDisable(GL_BLEND);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |GL_STENCIL_BUFFER_BIT);
+
+			screenShader->use();
+			glActiveTexture(GL_TEXTURE0);
+			ms_Ctx->m_ColorBuffer.Bind();
+			screenShader->setInt("screenTexture", 0);
+
+			ms_Ctx->m_screenMesh.Bind();
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			ms_Ctx->m_screenMesh.unBind();
+		}
 	}
 private:
+	//解析当前Mesh的渲染状态
 	void AnalyzeRenderState() {
 		#pragma region 填写渲染状态
 		MWDRenderState render_state = ms_Ctx.m_curMaterial->m_renderState;
@@ -315,6 +315,7 @@ private:
 		}
 		#pragma endregion
 	}
+	//传递Uniform变量
 	void DeliverMaterialUniform(MWDMaterial* Material) {
 		//↓不变的代码
 		#pragma region 传递Uniform变量
@@ -349,6 +350,7 @@ private:
 		}
 		#pragma endregion
 	}
+	//所有Shader都可以传入同样的内置变量，传多了也没关系
 	void SetInnerUniform(MWDMaterial* Material) {
 		#pragma region 填写内置变量
 		//shader内置变量传递（不需要editor内改变的uniform）
@@ -363,11 +365,13 @@ private:
 		Material->SetUniform<vec3, MWDVec3>(string("viewPos"), ms_Ctx.m_curCamera->Position);
 		#pragma endregion
 	}
+	//用当前的渲染状态和Shader来渲染当前的Mesh
 	void Render() {
 		glBindVertexArray(ms_Ctx.m_curMesh->VAO);
 		glDrawElements(GL_TRIANGLES, ms_Ctx.m_curMesh->indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
+	//渲染天空盒
 	void DrawSkyBox() {
 		if (!ms_Ctx.m_curSkyBox) {
 			return;
@@ -382,7 +386,7 @@ private:
 			skyboxShader->setInt("skybox", 0);
 			skyboxShader->setMat4("projection", _projection);
 			skyboxShader->setMat4("view", _view);
-			
+
 			glBindVertexArray(GetMainRenderer()->ms_Ctx.m_curSkyBox->skyboxVAO);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 			glBindVertexArray(0);

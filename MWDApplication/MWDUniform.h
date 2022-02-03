@@ -74,8 +74,8 @@ private:
     {
         unsigned int textureID;
         glGenTextures(1, &textureID);
-
         unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+        
         if (data)
         {
             GLenum format;

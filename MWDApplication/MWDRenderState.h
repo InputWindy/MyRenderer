@@ -69,7 +69,7 @@ public:
 	}
 public:
 	MWDRenderState() {
-		m_OffScreenRender = true;
+		m_OffScreenRender = false;
 		m_CompareMethod = CM_LESS;
 
 		m_bEnableDepth = true;

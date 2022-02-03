@@ -101,7 +101,7 @@ public:
             MWDTexture* tex1 = new MWDTexture(string("normal_map"), 1);
             defaultMaterial->AddSampler(tex1);
 
-            MWDTexture* tex2 = new MWDTexture(string("specular_map"), 2);
+            MWDTexture* tex2 = new MWDTexture(string("roughness_map"), 2);
             defaultMaterial->AddSampler(tex2);
 
             MWDTexture* tex3 = new MWDTexture(string("metallic_map"), 3);
@@ -110,9 +110,6 @@ public:
             MWDTexture* tex4 = new MWDTexture(string("ao_map"), 4);
             defaultMaterial->AddSampler(tex4);
 
-            MWDTexture* tex5 = new MWDTexture(string("pbr_map"), 5);
-            defaultMaterial->AddSampler(tex5);
-            
             #pragma endregion
 
         }

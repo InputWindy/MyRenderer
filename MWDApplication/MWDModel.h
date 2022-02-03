@@ -92,6 +92,19 @@ private:
             vector.y = mesh->mVertices[i].y;
             vector.z = mesh->mVertices[i].z;
             vertex.Position = vector;
+
+            // tangent
+            vector.x = mesh->mTangents[i].x;
+            vector.y = mesh->mTangents[i].y;
+            vector.z = mesh->mTangents[i].z;
+            vertex.Tangent = vector;
+
+            // bitangent
+            vector.x = mesh->mBitangents[i].x;
+            vector.y = mesh->mBitangents[i].y;
+            vector.z = mesh->mBitangents[i].z;
+            vertex.Bitangent = vector;
+            //cout << "(" << vertex.Bitangent.x << "," << vertex.Bitangent.y << "," << vertex.Bitangent.z << ")" << endl;
             // normals
             if (mesh->HasNormals())
             {
@@ -100,6 +113,7 @@ private:
                 vector.z = mesh->mNormals[i].z;
                 vertex.Normal = vector;
             }
+
             // texture coordinates
             if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
             {
@@ -112,17 +126,6 @@ private:
                     vec.y = mesh->mTextureCoords[j][i].y;
                     vertex.TexCoords[j] = vec;
                 }
-                
-                // tangent
-                vector.x = mesh->mTangents[i].x;
-                vector.y = mesh->mTangents[i].y;
-                vector.z = mesh->mTangents[i].z;
-                vertex.Tangent = vector;
-                // bitangent
-                vector.x = mesh->mBitangents[i].x;
-                vector.y = mesh->mBitangents[i].y;
-                vector.z = mesh->mBitangents[i].z;
-                vertex.Bitangent = vector;
             }
             else {
                 for (int j = 0; j < 8; ++j) {

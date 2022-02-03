@@ -203,6 +203,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\depend\imgui\imgui.ini" />
+    <None Include="..\shaders\shadowMap.frag" />
+    <None Include="..\shaders\shadowMap.vert" />
     <None Include="..\shaders\skyBox.frag" />
     <None Include="..\shaders\skyBox.vert" />
     <None Include="..\shaders\default.frag" />
