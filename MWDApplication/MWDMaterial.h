@@ -73,6 +73,10 @@ public:
         if (defaultMaterial) {
 
             #pragma region ÄÚÖÃ±äÁ¿
+            vec3 lightColor = vec3();
+            MWDVec3* _lightColor = new MWDVec3(string("lightColor"), string("lightColor"), lightColor);
+            defaultMaterial->AddUniform(_lightColor);
+
             vec3 lightpos = vec3();
             MWDVec3* _lightPos = new MWDVec3(string("lightPos"),string("lightPos"),lightpos);
             defaultMaterial->AddUniform(_lightPos);

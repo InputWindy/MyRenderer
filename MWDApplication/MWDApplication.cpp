@@ -110,7 +110,7 @@ int main() {
 	MWDModel gun = MWDModel(string("model_2"), string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Cerberus_LP.FBX"));
 	gun.SetWorldEulers(0, -90.0f, 0);
 	gun.SetWorldPosition(0, 0, 0);
-	gun.SetWorldScale(0.03,0.03,0.03);
+	gun.SetWorldScale(0.003,0.003,0.003);
 	gun.meshes[0].m_material->SetSampler("diffuse_map","C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_A.tga");
 	gun.meshes[0].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_N.tga");
 	gun.meshes[0].m_material->SetSampler("metallic_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_M.tga");
@@ -164,6 +164,7 @@ int main() {
 		ImGuiFrameBegin();
 		MWDRenderer::BeginRendering();
 		//Lucia.Draw();
+		//gun.SetWorldEulers(0, currentFrame/90.0f, 0);
 		gun.Draw();
 		MWDRenderer::EndRendering();
 		ImGuiFrameEnd(Hwindow);

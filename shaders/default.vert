@@ -6,10 +6,14 @@ layout (location = 3) in vec3 aBiTangent;
 layout (location = 10) in vec2 TexCoords0;
 	
 out VS_OUT{
-    vec3 vs_position;
+    vec3 vs_position;//世界空间坐标
+
+    //TBN矩阵
     vec3 vs_normal;
     vec3 vs_tangent;
     vec3 vs_bitangent;
+
+    //uv
     vec2 uv;
 }vs_out;
 
@@ -19,10 +23,12 @@ uniform mat4 projection;
 
 void main()
 {
-    vs_out.vs_position = aPos;
+    
     vs_out.vs_normal = aNormal;
     vs_out.vs_tangent = aTangent;
     vs_out.vs_bitangent = aBiTangent;
     vs_out.uv = TexCoords0;
+    vec4 worldPos = model * vec4(aPos, 1.0);
+    vs_out.vs_position =vec3(worldPos.xyz); //世界空间坐标
     gl_Position = projection * view *model * vec4(aPos, 1.0);
 }

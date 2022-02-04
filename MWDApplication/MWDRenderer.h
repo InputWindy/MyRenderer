@@ -158,6 +158,7 @@ public:
 		m_FBO.AttachColorBufferi(m_ColorBuffer.ID, 0);
 		m_FBO.AttachRbo(m_ZSBuffer.ID);
 
+		m_lightColor = vec3(1.0);
 	}
 	bool			m_OffScreenRender;		//是否开启离屏渲染
 
@@ -178,6 +179,8 @@ public:
 	MWDSkyBox*		m_curSkyBox;		//当前使用的天空盒（天空盒是渲染优先级最低的Mesh）
 
 	vector<MWDPass*>	m_Pass;			//维护特殊渲染流程
+
+	vec3            m_lightColor;		//点光源颜色
 };
 
 //Renderer维护一个renderCtx,实现绘制一帧画面的所有方法
@@ -361,7 +364,8 @@ private:
 		Material->SetUniform<mat4, MWDMat4>(string("view_matrix"), _view);
 		Material->SetUniform<mat4, MWDMat4>(string("model_matrix"), ms_Ctx.m_modelMatrix);
 
-		Material->SetUniform<vec3, MWDVec3>(string("lightPos"), vec3(-10, -10, -10));
+		Material->SetUniform<vec3, MWDVec3>(string("lightPos"), vec3(0,0,0));
+		Material->SetUniform<vec3, MWDVec3>(string("lightColor"), ms_Ctx.m_lightColor);
 		Material->SetUniform<vec3, MWDVec3>(string("viewPos"), ms_Ctx.m_curCamera->Position);
 		#pragma endregion
 	}
