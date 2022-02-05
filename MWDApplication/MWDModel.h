@@ -5,6 +5,8 @@
 #include "MWDMesh.h"
 #include "MWDMaterial.h"
 #include "MWDTransform.h"
+#include "MWDSkeleton.h"
+#include "MWDAnimation.h"
 //Model维护Mesh数组和一个材质
 class MWDRenderer;
 class MWDModel
@@ -13,23 +15,43 @@ public:
 	// constructor, expects a filepath to a 3D model.
 	MWDModel(string name,string const& path, bool gamma = false) : gammaCorrection(gamma)
 	{
+        m_rootMesh = NULL;
+        m_rootSkeleton = NULL;
         m_name = name;
 		loadModel(path);
 	}
 	~MWDModel() {
-        int num = meshes.size();
+        int num = m_meshes.size();
         for (int i = 0; i < num; ++i) {
-            glDeleteVertexArrays(1,&(meshes[i].VAO));
-            glDeleteBuffers(1, &(meshes[i].VBO));
-            glDeleteBuffers(1, &(meshes[i].IBO));
+            glDeleteVertexArrays(1,&(m_meshes[i].VAO));
+            glDeleteBuffers(1, &(m_meshes[i].VBO));
+            glDeleteBuffers(1, &(m_meshes[i].IBO));
         }
 	}
 public:
-    string              m_name;
-    MWDTransform        m_transform;
-	vector<MWDMesh>		meshes;
+    //模型名称
+    string                      m_name;
+    
+    MWDTransform                m_transform;
+
+    //Mesh的顺序遍历方式
+	vector<MWDMesh>		        m_meshes;
+
+    //Mesh的树形遍历方式
+    MWDMesh*                    m_rootMesh;
+
+    //骨骼的顺序遍历方式
+    vector<MWDSkeleton>         m_SkeletonNode;
+
+    //骨骼的树形遍历方式
+    MWDSkeleton*                m_rootSkeleton;
+
+    //当前模型的所有动画
+    vector<MWDAnimation>        m_animations;
+
 	string directory;
 	bool gammaCorrection;
+
     void Draw();
     void SetWorldPosition(float x, float y, float z) {
         m_transform.SetWorldPosition(x,y,z);
@@ -43,50 +65,49 @@ public:
 private:
     void loadModel(string const& path)
     {
-        // read file via ASSIMP
         Assimp::Importer importer;
         const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-        // check for errors
+        // 错误提示
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
         {
             cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
             return;
         }
-        // retrieve the directory path of the filepath
         directory = path.substr(0, path.find_last_of('/'));
-
-        // process ASSIMP's root node recursively
-        processNode(scene->mRootNode, scene);
+        LoadAnimation(scene);                           //在这里加载模型包含的所有动画
+        processNode(NULL,scene->mRootNode, scene);      //在这里解析所有的Mesh和骨骼
+        SetUpAllMeshes();                               //在这里生成所有Mesh的VAO
     }
-    // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-    void processNode(aiNode* node, const aiScene* scene)
+    //每个Node对应模型的一个子Mesh
+    void processNode(aiNode* parent_node, aiNode* node, const aiScene* scene)
     {
-        // process each mesh located at the current node
         for (unsigned int i = 0; i < node->mNumMeshes; i++)
         {
-            // the node object only contains indices to index the actual objects in the scene. 
-            // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
             aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-            meshes.push_back(processMesh(mesh, scene));
+            m_meshes.push_back(processMesh(parent_node,node,mesh, scene));
+            m_SkeletonNode.push_back(processSkeleton(parent_node, node, mesh, scene));
         }
-        // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
         for (unsigned int i = 0; i < node->mNumChildren; i++)
         {
-            processNode(node->mChildren[i], scene);
+            processNode(node,node->mChildren[i], scene);
         }
-
     }
-    MWDMesh& processMesh(aiMesh* mesh, const aiScene* scene)
+    //填写：名称（√），Owner（√），vertices，indices，父节点，子节点
+    MWDMesh processMesh(aiNode* parent_node, aiNode*node, aiMesh* mesh, const aiScene* scene)
     {
-        // data to fill
+        MWDMesh ret = MWDMesh();
+        ret.m_meshName = string(node->mName.data);
+        ret.m_Owner = this;
+
+        //需要填写的数据
         vector<Vertex> vertices;
         vector<unsigned int> indices;
 
-        // walk through each of the mesh's vertices
+        // 解析vertices
         for (unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
-            glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+            glm::vec3 vector;
             // positions
             vector.x = mesh->mVertices[i].x;
             vector.y = mesh->mVertices[i].y;
@@ -104,7 +125,7 @@ private:
             vector.y = mesh->mBitangents[i].y;
             vector.z = mesh->mBitangents[i].z;
             vertex.Bitangent = vector;
-            //cout << "(" << vertex.Bitangent.x << "," << vertex.Bitangent.y << "," << vertex.Bitangent.z << ")" << endl;
+
             // normals
             if (mesh->HasNormals())
             {
@@ -114,8 +135,16 @@ private:
                 vertex.Normal = vector;
             }
 
+            //bones
+            if (mesh->HasBones()) {
+                int bone_num = mesh->mNumBones;
+                for (int i = 0; i < bone_num; ++i) {
+
+                }
+            }
+
             // texture coordinates
-            if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+            if (mesh->mTextureCoords[0])
             {
                 int uv_num = mesh->GetNumUVChannels();
                 glm::vec2 vec;
@@ -132,19 +161,41 @@ private:
                     vertex.TexCoords[j] = glm::vec2(0.0f, 0.0f);
                 }
             }
+
             vertices.push_back(vertex);
         }
 
-        // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+        //解析indices
         for (unsigned int i = 0; i < mesh->mNumFaces; i++)
         {
             aiFace face = mesh->mFaces[i];
-            // retrieve all indices of the face and store them in the indices vector
             for (unsigned int j = 0; j < face.mNumIndices; j++)
                 indices.push_back(face.mIndices[j]);
         }
-        MWDMesh& ret =*new MWDMesh(vertices, indices,this);
+        
+        ret.indices = indices;
+        ret.vertices = vertices;
         return ret;
     }
+    MWDSkeleton processSkeleton(aiNode* parent_node, aiNode* node, aiMesh* mesh, const aiScene* scene) {
+        MWDSkeleton ret = MWDSkeleton();
+        /*for (int i = 0; i < mesh->mNumBones; ++i) {
+            string bone_name(mesh->mBones[i]->mName.data);
+            cout << mesh->mBones[i]->mNumWeights << endl;
+        }*/
+        return ret;
+    }
+    private:
+        void LoadAnimation(const aiScene* scene) {
+            if (scene->HasAnimations()) {
+                cout << "loadModel:有动画！" << endl;
+            };
+        }
+        void SetUpAllMeshes() {
+            for (int i = 0; i < m_meshes.size(); ++i) {
+                m_meshes[i].setupMesh();
+            }
+        }
+
 };
 

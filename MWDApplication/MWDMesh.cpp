@@ -2,15 +2,11 @@
 #include "MWDRenderer.h"
 #include "MWDMaterial.h"
 #include "MWDModel.h"
-MWDMesh::MWDMesh(vector<Vertex> vertices, vector<unsigned int> indices, MWDModel* owner)
+MWDMesh::MWDMesh()
 {
-	m_Owner = owner;
+	m_pMeshParent = NULL;
+	m_Owner = NULL;
 	m_material = MWDMaterial::GetDefault();
-    this->vertices = vertices;
-    this->indices = indices;
-    //上传顶点数据，绑定顶点索引指针，获取填写完整的vbo和ibo。
-    setupMesh();
-	//cout << m_material << endl;
 }
 
 //设置RenderCtx然后DrawFrame()

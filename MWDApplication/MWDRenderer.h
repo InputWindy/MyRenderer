@@ -159,6 +159,8 @@ public:
 		m_FBO.AttachRbo(m_ZSBuffer.ID);
 
 		m_lightColor = vec3(1.0);
+
+		m_environmentMap = NULL;
 	}
 	bool			m_OffScreenRender;		//是否开启离屏渲染
 
@@ -180,7 +182,15 @@ public:
 
 	vector<MWDPass*>	m_Pass;			//维护特殊渲染流程
 
-	vec3            m_lightColor;		//点光源颜色
+	vec3				m_lightColor;		//点光源颜色
+
+	vector<ShadowMap*>	m_shadowMap;		//每一个光源维护一个ShadowMap(可以同时传入多张ShadowMap)
+
+	//当前Mesh所使用的环境贴图（由反射探针烘焙的）
+	//环境贴图是一个Render()前的Pass，从Mesh位置处渲染CubeMap，
+	//由Mesh对应的Material里的反射探针Pass维护这张贴图。
+	//默认是天空盒对应的CubeMap
+	EnvironmentMap*		m_environmentMap;	
 };
 
 //Renderer维护一个renderCtx,实现绘制一帧画面的所有方法
@@ -240,6 +250,8 @@ public:
 		assert(_screen_height>0);
 		ms_Ctx.screen_height = _screen_height;
 	}
+
+	//设置天空盒的时候，也设置了所有Mesh默认的环境光贴图
 	void SetSkyBox(MWDSkyBox* skyBox) {
 		assert(skyBox);
 		ms_Ctx.m_curSkyBox = skyBox;
@@ -351,6 +363,13 @@ private:
 			tmp->Bind();
 			cur_Material->m_shaderProgram->setSampler(tmp->nameInEditor, tmp->m_tex_unit);
 		}
+		
+		//填写内置纹理：环境贴图，shadowMap
+		if (!ms_Ctx.m_environmentMap) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, ms_Ctx.m_curSkyBox->ID);
+			cur_Shader->setSampler("environment_map",0);
+		}
 		#pragma endregion
 	}
 	//所有Shader都可以传入同样的内置变量，传多了也没关系
@@ -364,7 +383,7 @@ private:
 		Material->SetUniform<mat4, MWDMat4>(string("view_matrix"), _view);
 		Material->SetUniform<mat4, MWDMat4>(string("model_matrix"), ms_Ctx.m_modelMatrix);
 
-		Material->SetUniform<vec3, MWDVec3>(string("lightPos"), vec3(0,0,0));
+		Material->SetUniform<vec3, MWDVec3>(string("lightPos"), vec3(100,100,100));
 		Material->SetUniform<vec3, MWDVec3>(string("lightColor"), ms_Ctx.m_lightColor);
 		Material->SetUniform<vec3, MWDVec3>(string("viewPos"), ms_Ctx.m_curCamera->Position);
 		#pragma endregion

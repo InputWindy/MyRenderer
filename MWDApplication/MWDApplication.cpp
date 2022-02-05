@@ -107,53 +107,56 @@ int main() {
 	MWDRenderer::GetMainRenderer()->SetScreenWidth(SCR_WIDTH/2);
 	MWDRenderer::GetMainRenderer()->SetSkyBox(MWDSkyBox::GetDefaultSkyBox());
 	MWDRenderer::UseMSAA();
-	MWDModel gun = MWDModel(string("model_2"), string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Cerberus_LP.FBX"));
+	/*MWDModel gun = MWDModel(string("model_2"), string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Cerberus_LP.FBX"));
 	gun.SetWorldEulers(0, -90.0f, 0);
 	gun.SetWorldPosition(0, 0, 0);
 	gun.SetWorldScale(0.003,0.003,0.003);
-	gun.meshes[0].m_material->SetSampler("diffuse_map","C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_A.tga");
-	gun.meshes[0].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_N.tga");
-	gun.meshes[0].m_material->SetSampler("metallic_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_M.tga");
-	gun.meshes[0].m_material->SetSampler("ao_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Raw/Cerberus_AO.tga");
-	gun.meshes[0].m_material->SetSampler("roughness_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_R.tga");
-	#pragma region Lucia
+	gun.m_meshes[0].m_material->SetSampler("diffuse_map","C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_A.tga");
+	gun.m_meshes[0].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_N.tga");
+	gun.m_meshes[0].m_material->SetSampler("metallic_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_M.tga");
+	gun.m_meshes[0].m_material->SetSampler("ao_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Raw/Cerberus_AO.tga");
+	gun.m_meshes[0].m_material->SetSampler("roughness_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/gun/gun/Textures/Cerberus_R.tga");
+	*/#pragma region Lucia
 	MWDModel Lucia = MWDModel(string("model_1"), string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/f.fbx"));
 	Lucia.SetWorldEulers(0, 360.0f - 135.0f, 0);
 	Lucia.SetWorldPosition(0, 0, 0);
 	//0123不知道是啥.4是右腿，5是左腿，6是眼睛，7是脸，8是头发，9是手，10是耳机，11是衣服
-	Lucia.meshes[4].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia//R3Luxiya01001Down.png");
-	Lucia.meshes[4].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia//R3Luxiya01001DownNM.png");
+	Lucia.m_meshes[4].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia//R3Luxiya01001Down.png");
+	Lucia.m_meshes[4].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia//R3Luxiya01001DownNM.png");
 
-	Lucia.meshes[5].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
-	Lucia.meshes[5].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
+	Lucia.m_meshes[5].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
+	Lucia.m_meshes[5].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
 
-	Lucia.meshes[6].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Eye.png");
-	Lucia.meshes[7].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Face.png");
+	Lucia.m_meshes[6].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Eye.png");
+	Lucia.m_meshes[7].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Face.png");
 
-	Lucia.meshes[8].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Hair.png");
+	Lucia.m_meshes[8].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Hair.png");
 
-	Lucia.meshes[9].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Hand.png");
-	Lucia.meshes[9].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001HandNM.png");
+	Lucia.m_meshes[9].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Hand.png");
+	Lucia.m_meshes[9].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001HandNM.png");
 
-	Lucia.meshes[10].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Upper.png");
-	Lucia.meshes[10].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001UpperNM.png");
+	Lucia.m_meshes[10].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Upper.png");
+	Lucia.m_meshes[10].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001UpperNM.png");
 
-	Lucia.meshes[11].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Upper.png");
-	Lucia.meshes[11].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001UpperNM.png");
+	Lucia.m_meshes[11].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001Upper.png");
+	Lucia.m_meshes[11].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/R3Luxiya01001UpperNM.png");
 
-	Lucia.meshes[3].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
-	Lucia.meshes[3].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
+	Lucia.m_meshes[3].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
+	Lucia.m_meshes[3].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
 
-	Lucia.meshes[2].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
-	Lucia.meshes[2].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
+	Lucia.m_meshes[2].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
+	Lucia.m_meshes[2].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
 
-	Lucia.meshes[1].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
-	Lucia.meshes[1].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
+	Lucia.m_meshes[1].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
+	Lucia.m_meshes[1].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
 
-	Lucia.meshes[0].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
-	Lucia.meshes[0].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
+	Lucia.m_meshes[0].m_material->SetSampler("diffuse_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011.png");
+	Lucia.m_meshes[0].m_material->SetSampler("normal_map", "C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/objModel/lucia/E3SwordMd090011NM.png");
 	#pragma endregion
-
+	for (int i = 0; i < Lucia.m_meshes.size(); ++i) {
+		cout<<Lucia.m_meshes[i].m_meshName << endl;
+	}
+	
 	while (!glfwWindowShouldClose(Hwindow)) {
 		#pragma region updateTime
 		float currentFrame = glfwGetTime();
@@ -163,9 +166,9 @@ int main() {
 		processInput(Hwindow);
 		ImGuiFrameBegin();
 		MWDRenderer::BeginRendering();
-		//Lucia.Draw();
-		//gun.SetWorldEulers(0, currentFrame/90.0f, 0);
-		gun.Draw();
+		Lucia.Draw();
+		/*gun.SetWorldEulers( currentFrame/90.0f, 0,0);
+		gun.Draw();*/
 		MWDRenderer::EndRendering();
 		ImGuiFrameEnd(Hwindow);
 

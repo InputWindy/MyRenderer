@@ -2,7 +2,7 @@
 #include "MWDRenderer.h"
 void MWDModel::Draw()
 {
-    for (int i = 0; i < meshes.size(); ++i) {
-        meshes[i].DrawMesh(MWDRenderer::GetMainRenderer());
+    for (int i = 0; i < m_meshes.size(); ++i) {
+        m_meshes[i].DrawMesh(MWDRenderer::GetMainRenderer());
     }
 }

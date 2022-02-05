@@ -125,7 +125,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)depend\glm\glm;$(SolutionDir)depend\imgui;$(SolutionDir)depend\stbimg;$(SolutionDir)depend\glfw\include;$(SolutionDir)depend\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)MWDApplication;$(SolutionDir)math;$(SolutionDir)depend\glm\glm;$(SolutionDir)depend\imgui;$(SolutionDir)depend\stbimg;$(SolutionDir)depend\glfw\include;$(SolutionDir)depend\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,8 +165,21 @@
     <ClInclude Include="..\depend\imgui\imstb_textedit.h" />
     <ClInclude Include="..\depend\imgui\imstb_truetype.h" />
     <ClInclude Include="..\depend\stbimg\stb_image.h" />
+    <ClInclude Include="..\math\MWDAABB3.h" />
+    <ClInclude Include="..\math\MWDCylinder3.h" />
+    <ClInclude Include="..\math\MWDLine3.h" />
+    <ClInclude Include="..\math\MWDOBB3.h" />
+    <ClInclude Include="..\math\MWDPlane3.h" />
+    <ClInclude Include="..\math\MWDRay3.h" />
+    <ClInclude Include="..\math\MWDRectangle3.h" />
+    <ClInclude Include="..\math\MWDSegment3.h" />
+    <ClInclude Include="..\math\MWDSphere3.h" />
+    <ClInclude Include="..\math\MWDTriangle3.h" />
     <ClInclude Include="headers.h" />
+    <ClInclude Include="MWDAnimation.h" />
+    <ClInclude Include="MWDMath.h" />
     <ClInclude Include="MWDApplication.h" />
+    <ClInclude Include="MWDBoneNode.h" />
     <ClInclude Include="MWDCamera.h" />
     <ClInclude Include="MWDMaterial.h" />
     <ClInclude Include="MWDMesh.h" />
@@ -175,6 +188,7 @@
     <ClInclude Include="MWDRenderer.h" />
     <ClInclude Include="MWDRenderState.h" />
     <ClInclude Include="MWDShader.h" />
+    <ClInclude Include="MWDSkeleton.h" />
     <ClInclude Include="MWDSkyBox.h" />
     <ClInclude Include="MWDTransform.h" />
     <ClInclude Include="MWDUniform.h" />
@@ -188,7 +202,9 @@
     <ClCompile Include="..\depend\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\depend\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\depend\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="MWDAnimation.cpp" />
     <ClCompile Include="MWDApplication.cpp" />
+    <ClCompile Include="MWDBoneNode.cpp" />
     <ClCompile Include="MWDCamera.cpp" />
     <ClCompile Include="MWDMaterial.cpp" />
     <ClCompile Include="MWDMesh.cpp" />
@@ -197,6 +213,7 @@
     <ClCompile Include="MWDRenderer.cpp" />
     <ClCompile Include="MWDRenderState.cpp" />
     <ClCompile Include="MWDShader.cpp" />
+    <ClCompile Include="MWDSkeleton.cpp" />
     <ClCompile Include="MWDSkyBox.cpp" />
     <ClCompile Include="MWDTransform.cpp" />
     <ClCompile Include="MWDUniform.cpp" />

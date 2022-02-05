@@ -3,14 +3,10 @@ out vec4 FragColor;
 
 in VS_OUT{
     vec3 vs_position;//世界空间坐标
-
-    //TBN矩阵
-    vec3 vs_normal;
-    vec3 vs_tangent;
-    vec3 vs_bitangent;
-
-    //uv
-    vec2 uv;
+    
+    vec2 uv;         //uv
+    
+    mat3 TBN;        //TBN矩阵
 }fs_in;
 
 uniform vec3 lightPos;
@@ -22,6 +18,8 @@ uniform sampler2D normal_map;
 uniform sampler2D metallic_map;
 uniform sampler2D ao_map;
 uniform sampler2D roughness_map;
+
+uniform samplerCube environment_map;
 
 const float PI = 3.1415926535;
 
@@ -68,15 +66,17 @@ vec3 CalRadiance(vec3 light_color,float _distance){
     return light_color*attenuation;
 }
 
+//以下计算全部在世界空间下
 void main()
 {   
     //法线
-    mat3 TBN = mat3(fs_in.vs_tangent, fs_in.vs_bitangent, fs_in.vs_normal);
     vec3 normal = texture(normal_map, fs_in.uv).rgb;
     normal = normalize(normal * 2.0 - 1.0);   
-    normal = normalize(TBN * normal);
+    normal = normalize(fs_in.TBN * normal);
+    //环境光强度
+    vec3 irradiance = texture(environment_map,normal).rgb;
     //反照率(sRGB)
-    vec3  albedo =texture(diffuse_map, fs_in.uv).rgb;//pow(texture(diffuse_map, fs_in.uv).rgb,vec3(1.0/2.2));
+    vec3  albedo =pow(texture(diffuse_map, fs_in.uv).rgb,vec3(2.2));
     //金属度（线性空间）
     float metallic = texture(metallic_map, fs_in.uv).r;
     //粗糙度（线性空间）
@@ -85,7 +85,7 @@ void main()
     float ao = texture(ao_map, fs_in.uv).r;
     // 入射光方向（指向光源）
     vec3 lightDir = normalize(lightPos - fs_in.vs_position);
-    float bias = max(0.05 * (1.0 - dot(fs_in.vs_normal, lightDir)), 0.005);//阴影bias（暂时无用）
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);//阴影bias（暂时无用）
     //视线方向
     vec3 viewDir = normalize(viewPos - fs_in.vs_position);
     //反射方向
@@ -94,6 +94,8 @@ void main()
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     //====================以下进行pbr光照计算===============//
     vec3 F0 = mix(vec3(0.04), albedo, metallic);
+    vec3 Lo = vec3(0.0);
+
     vec3 F  = fresnelSchlick(max(dot(halfwayDir, viewDir), 0.0), F0);
     float NDF = D_GGX_TR(normal, halfwayDir, roughness);       
     float G   = GeometrySmith(normal, viewDir, lightDir, roughness);  
@@ -107,11 +109,9 @@ void main()
 
     float NdotL = max(dot(normal, lightDir), 0.0);  
     
-    //蒙特卡洛积分
-    vec3 Lo = ( kS*albedo / PI + specular) * lightColor * NdotL;
+    Lo += ( kD*albedo / PI + kS*specular) * lightColor * NdotL;
     
-    FragColor   = vec4(Lo,1.0);
+    FragColor   = vec4( Lo,1.0);
     //====================以下进行gamma校正===============//
-    FragColor.rgb = pow(FragColor.rgb, vec3(1.0));//颜色修改为sRGB空间
-
+    FragColor.rgb = pow(FragColor.rgb, vec3(1.0/2.2));//颜色修改为sRGB空间
 }

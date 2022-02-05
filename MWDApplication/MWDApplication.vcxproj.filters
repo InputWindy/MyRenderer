@@ -25,6 +25,15 @@
     <Filter Include="头文件\Pass">
       <UniqueIdentifier>{acdc164a-c613-4dfb-9353-9fe4f07b4cb2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\math">
+      <UniqueIdentifier>{d092bda5-c9a2-4322-8d5f-f4767c5a9618}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Skeleton">
+      <UniqueIdentifier>{06130571-8aa8-4228-9d1e-f483c14e017c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Animation">
+      <UniqueIdentifier>{594f5df3-0681-4ce3-b683-1a7b7cbc5c2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MWDApplication.h">
@@ -94,7 +103,49 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MWDPass.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDAABB3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDCylinder3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDLine3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDOBB3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDPlane3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDRay3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDRectangle3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDSegment3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDSphere3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\math\MWDTriangle3.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="MWDMath.h">
+      <Filter>头文件\math</Filter>
+    </ClInclude>
+    <ClInclude Include="MWDSkeleton.h">
+      <Filter>头文件\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="MWDBoneNode.h">
+      <Filter>头文件\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="MWDAnimation.h">
+      <Filter>头文件\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +207,16 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MWDPass.cpp">
-      <Filter>源文件</Filter>
+      <Filter>头文件\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="MWDSkeleton.cpp">
+      <Filter>头文件\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="MWDBoneNode.cpp">
+      <Filter>头文件\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="MWDAnimation.cpp">
+      <Filter>头文件\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

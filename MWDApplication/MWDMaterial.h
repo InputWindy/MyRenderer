@@ -2,6 +2,7 @@
 #include "MWDShader.h"
 #include "MWDUniform.h"
 #include "MWDRenderState.h"
+#include "MWDPass.h"
 //Material维护ShaderProgram的Uniform变量
 class MWDMaterial
 {

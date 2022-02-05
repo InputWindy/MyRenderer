@@ -5,33 +5,6 @@
 //使用方法：先bind，再SetSampler，再Unbind
 class MWDTexture {
 public:
-    //FBO绑定使用
-    MWDTexture(unsigned int tex_unit = 0, int wid = 800, int hei = 600, int channels = 3) {
-        m_tex_unit = tex_unit;
-        width = wid;
-        height = hei;
-        nrComponents = channels;
-
-        glGenTextures(1, &id);
-        glActiveTexture(tex_unit);
-        glBindTexture(GL_TEXTURE_2D, id);
-        GLenum format;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, NULL);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glActiveTexture(0);
-    }
     //Shader贴图导入
     MWDTexture(string nameineditor, unsigned int tex_unit, string path = string("C:/Users/InputWindy/Desktop/MyRenderer/MWDEngine/img/default.jpeg")) {
         m_path = path;
@@ -106,8 +79,8 @@ private:
 
         return textureID;
     }
-
 };
+
 
 //维护Shader变量:名称
 class MWDUniform
